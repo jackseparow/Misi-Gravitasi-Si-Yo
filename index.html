@@ -17,13 +17,19 @@
 
         #main-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1350px; height: 680px; align-items: stretch; }
 
-        /* --- Sisi Kiri: Variabel --- */
-        #controls { 
-            width: 250px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; 
-            display: flex; flex-direction: column; gap: 15px; border-left: 4px solid #4cc9f0;
+        /* --- Sisi Kiri: Pilih Lokasi Planet --- */
+        #planet-palette { 
+            width: 230px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; 
+            display: flex; flex-direction: column; gap: 8px; overflow-y: auto; border-left: 4px solid #f1c40f;
         }
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        input { padding: 10px; border-radius: 6px; border: none; background: #1a1c2c; color: white; border: 1px solid #444; font-size: 1em; }
+        .planet-btn { 
+            padding: 12px; border: none; border-radius: 8px; cursor: pointer; text-align: left; 
+            transition: 0.3s; background: #222; color: white; display: flex; align-items: center; 
+            justify-content: space-between; font-size: 0.95em; 
+        }
+        .planet-btn:hover { background: #333; transform: translateX(5px); }
+        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
+        .symbol { font-size: 1.3em; width: 30px; text-align: center; }
 
         /* --- Tengah: Area Simulasi --- */
         #sim-area { 
@@ -39,19 +45,13 @@
         }
         #timer-display { position: absolute; top: 20px; right: 20px; font-family: monospace; font-size: 2.5em; color: #f1c40f; text-shadow: 2px 2px 4px black; }
 
-        /* --- Sisi Kanan: Lokasi Planet --- */
-        #planet-palette { 
-            width: 230px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; 
-            display: flex; flex-direction: column; gap: 8px; overflow-y: auto; border-right: 4px solid #f1c40f;
+        /* --- Sisi Kanan: Variabel --- */
+        #controls { 
+            width: 250px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; 
+            display: flex; flex-direction: column; gap: 15px; border-right: 4px solid #4cc9f0;
         }
-        .planet-btn { 
-            padding: 12px; border: none; border-radius: 8px; cursor: pointer; text-align: left; 
-            transition: 0.3s; background: #222; color: white; display: flex; align-items: center; 
-            justify-content: space-between; font-size: 0.95em; 
-        }
-        .planet-btn:hover { background: #333; transform: translateX(-5px); }
-        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
-        .symbol { font-size: 1.3em; width: 30px; text-align: center; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        input { padding: 10px; border-radius: 6px; border: none; background: #1a1c2c; color: white; border: 1px solid #444; font-size: 1em; }
 
         .info-box { padding: 12px; background: rgba(76, 201, 240, 0.15); border-radius: 8px; font-size: 0.9em; }
         button#btn-main { background: #4cc9f0; color: #000; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: 0.2s; }
@@ -73,30 +73,6 @@
     </div>
 
     <div id="main-wrapper">
-        <div id="controls">
-            <h3 style="margin: 0; color: #4cc9f0; text-align: center;">Variabel</h3>
-            <div class="input-group">
-                <label>Tinggi Awal Meter:</label>
-                <input type="number" id="input-height" value="100" onchange="initPos()">
-            </div>
-            <div class="input-group">
-                <label>Berat Batu kg:</label>
-                <input type="number" id="input-mass" value="5" oninput="updateMass()">
-            </div>
-            <div class="info-box">
-                <b>Planet:</b> <span id="lbl-planet">Bumi</span><br>
-                <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
-            </div>
-            <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
-            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px; border-radius: 8px; cursor: pointer;">RESET POSISI</button>
-        </div>
-
-        <div id="sim-area">
-            <div id="timer-display">0.00s</div>
-            <div id="rock">5kg</div>
-            <div id="ground"></div>
-        </div>
-
         <div id="planet-palette">
             <h3 style="margin: 0; color: #f1c40f; text-align: center;">Pilih Lokasi</h3>
             <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')"><span class="symbol">☿</span> Merkurius</button>
@@ -109,6 +85,30 @@
             <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')"><span class="symbol">♅</span> Uranus</button>
             <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')"><span class="symbol">♆</span> Neptunus</button>
             <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')"><span class="symbol">♇</span> Pluto</button>
+        </div>
+
+        <div id="sim-area">
+            <div id="timer-display">0.00s</div>
+            <div id="rock">5kg</div>
+            <div id="ground"></div>
+        </div>
+
+        <div id="controls">
+            <h3 style="margin: 0; color: #4cc9f0; text-align: center;">Variabel</h3>
+            <div class="input-group">
+                <label>Tinggi Awal Meter:</label>
+                <input type="number" id="input-height" value="100" onchange="initPos()">
+            </div>
+            <div class="input-group">
+                <label>Berat Batu kg:</label>
+                <input type="number" id="input-mass" value="5" oninput="updateMass()">
+            </div>
+            <div class="info-box">
+                <b>Lokasi:</b> <span id="lbl-planet">Bumi</span><br>
+                <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
+            </div>
+            <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
+            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px; border-radius: 8px; cursor: pointer;">RESET POSISI</button>
         </div>
     </div>
 
