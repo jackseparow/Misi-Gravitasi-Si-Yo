@@ -15,32 +15,17 @@
         h2 { margin: 0; color: #4cc9f0; }
         .sub-h2 { color: #f1c40f; margin: 5px 0 0 0; font-weight: bold; }
 
-        #main-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1200px; height: 750px; }
+        #main-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1350px; height: 680px; align-items: stretch; }
 
-        /* --- Kolom Kiri: Pusat Kendali (Maskot + Variabel + Planet) --- */
-        #sidebar-left { 
-            width: 300px; display: flex; flex-direction: column; gap: 15px; 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;
+        /* --- Sisi Kiri: Variabel --- */
+        #controls { 
+            width: 250px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; 
+            display: flex; flex-direction: column; gap: 15px; border-left: 4px solid #4cc9f0;
         }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        input { padding: 10px; border-radius: 6px; border: none; background: #1a1c2c; color: white; border: 1px solid #444; font-size: 1em; }
 
-        #controls { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; }
-        .input-group { display: flex; flex-direction: column; gap: 3px; font-size: 0.9em; }
-        input { padding: 8px; border-radius: 5px; border: none; background: #1a1c2c; color: white; border: 1px solid #444; }
-
-        #planet-palette { 
-            display: flex; flex-direction: column; gap: 6px; overflow-y: auto; 
-            max-height: 350px; padding-right: 5px; 
-        }
-        /* Custom Scrollbar untuk palet */
-        #planet-palette::-webkit-scrollbar { width: 5px; }
-        #planet-palette::-webkit-scrollbar-thumb { background: #4cc9f0; border-radius: 10px; }
-
-        .planet-btn { padding: 10px; border: none; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; background: #222; color: white; display: flex; align-items: center; justify-content: space-between; font-size: 0.9em; }
-        .planet-btn:hover { background: #444; }
-        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
-        .symbol { font-size: 1.2em; width: 25px; text-align: center; }
-
-        /* --- Area Tengah: Simulasi Jatuh --- */
+        /* --- Tengah: Area Simulasi --- */
         #sim-area { 
             flex-grow: 1; background: linear-gradient(#0b0d17, #1a1c2c); border-radius: 12px; 
             position: relative; border: 2px solid #4cc9f0; overflow: hidden; 
@@ -49,14 +34,32 @@
         #rock { 
             position: absolute; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; 
             background: radial-gradient(#aaa, #444); border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; font-size: 12px; font-weight: bold; 
-            border: 2px solid #666; box-shadow: 0 0 15px rgba(255,255,255,0.2); 
+            align-items: center; justify-content: center; font-size: 11px; font-weight: bold; 
+            border: 2px solid #666; box-shadow: 0 0 15px rgba(255,255,255,0.3); 
         }
         #timer-display { position: absolute; top: 20px; right: 20px; font-family: monospace; font-size: 2.5em; color: #f1c40f; text-shadow: 2px 2px 4px black; }
 
-        .info-box { padding: 10px; background: rgba(76, 201, 240, 0.2); border-radius: 8px; font-size: 0.85em; border-left: 4px solid #4cc9f0; }
+        /* --- Sisi Kanan: Lokasi Planet --- */
+        #planet-palette { 
+            width: 230px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; 
+            display: flex; flex-direction: column; gap: 8px; overflow-y: auto; border-right: 4px solid #f1c40f;
+        }
+        .planet-btn { 
+            padding: 12px; border: none; border-radius: 8px; cursor: pointer; text-align: left; 
+            transition: 0.3s; background: #222; color: white; display: flex; align-items: center; 
+            justify-content: space-between; font-size: 0.95em; 
+        }
+        .planet-btn:hover { background: #333; transform: translateX(-5px); }
+        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
+        .symbol { font-size: 1.3em; width: 30px; text-align: center; }
+
+        .info-box { padding: 12px; background: rgba(76, 201, 240, 0.15); border-radius: 8px; font-size: 0.9em; }
         button#btn-main { background: #4cc9f0; color: #000; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: 0.2s; }
-        button#btn-main:hover { background: #3ab1d4; transform: scale(1.02); }
+        button#btn-main:hover { background: #3ab1d4; transform: scale(1.03); }
+        
+        /* Scrollbar styling */
+        #planet-palette::-webkit-scrollbar { width: 5px; }
+        #planet-palette::-webkit-scrollbar-thumb { background: #f1c40f; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -70,44 +73,42 @@
     </div>
 
     <div id="main-wrapper">
-        <div id="sidebar-left">
-            
-            <div id="controls">
-                <div class="input-group">
-                    <label>Tinggi Awal Meter:</label>
-                    <input type="number" id="input-height" value="100" onchange="initPos()">
-                </div>
-                <div class="input-group">
-                    <label>Berat Batu kg:</label>
-                    <input type="number" id="input-mass" value="5" oninput="updateMass()">
-                </div>
-                <div class="info-box">
-                    <b>Lokasi:</b> <span id="lbl-planet">Bumi</span><br>
-                    <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
-                </div>
-                <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
-                <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.8em;">RESET POSISI</button>
+        <div id="controls">
+            <h3 style="margin: 0; color: #4cc9f0; text-align: center;">Variabel</h3>
+            <div class="input-group">
+                <label>Tinggi Awal Meter:</label>
+                <input type="number" id="input-height" value="100" onchange="initPos()">
             </div>
-
-            <div id="planet-palette">
-                <h4 style="margin: 5px 0; text-align: center; color: #4cc9f0;">Pilih Lokasi Planet</h4>
-                <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')"><span class="symbol">☿</span> Merkurius</button>
-                <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')"><span class="symbol">♀</span> Venus</button>
-                <button class="planet-btn active" onclick="selectPlanet('Bumi', 9.8, '#1a1c2c', '#3498db')"><span class="symbol">♁</span> Bumi</button>
-                <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')"><span class="symbol">☾</span> Bulan</button>
-                <button class="planet-btn" onclick="selectPlanet('Mars', 3.71, '#2c1a1a', '#c0392b')"><span class="symbol">♂</span> Mars</button>
-                <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')"><span class="symbol">♃</span> Jupiter</button>
-                <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')"><span class="symbol">♄</span> Saturnus</button>
-                <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')"><span class="symbol">♅</span> Uranus</button>
-                <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')"><span class="symbol">♆</span> Neptunus</button>
-                <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')"><span class="symbol">♇</span> Pluto</button>
+            <div class="input-group">
+                <label>Berat Batu kg:</label>
+                <input type="number" id="input-mass" value="5" oninput="updateMass()">
             </div>
+            <div class="info-box">
+                <b>Planet:</b> <span id="lbl-planet">Bumi</span><br>
+                <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
+            </div>
+            <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
+            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px; border-radius: 8px; cursor: pointer;">RESET POSISI</button>
         </div>
 
         <div id="sim-area">
             <div id="timer-display">0.00s</div>
             <div id="rock">5kg</div>
             <div id="ground"></div>
+        </div>
+
+        <div id="planet-palette">
+            <h3 style="margin: 0; color: #f1c40f; text-align: center;">Pilih Lokasi</h3>
+            <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')"><span class="symbol">☿</span> Merkurius</button>
+            <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')"><span class="symbol">♀</span> Venus</button>
+            <button class="planet-btn active" onclick="selectPlanet('Bumi', 9.8, '#1a1c2c', '#3498db')"><span class="symbol">♁</span> Bumi</button>
+            <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')"><span class="symbol">☾</span> Bulan</button>
+            <button class="planet-btn" onclick="selectPlanet('Mars', 3.71, '#2c1a1a', '#c0392b')"><span class="symbol">♂</span> Mars</button>
+            <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')"><span class="symbol">♃</span> Jupiter</button>
+            <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')"><span class="symbol">♄</span> Saturnus</button>
+            <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')"><span class="symbol">♅</span> Uranus</button>
+            <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')"><span class="symbol">♆</span> Neptunus</button>
+            <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')"><span class="symbol">♇</span> Pluto</button>
         </div>
     </div>
 
