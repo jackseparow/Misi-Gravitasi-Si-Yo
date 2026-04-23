@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>Si Yo: Simulator Gravitasi Tata Surya</title>
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0b0d17; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; overflow-x: hidden; }
         
@@ -16,7 +15,7 @@
         h2 { margin: 0; color: #4cc9f0; }
         .sub-h2 { color: #f1c40f; margin: 5px 0 0 0; font-weight: bold; }
 
-        #main-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1200px; height: 650px; }
+        #main-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1200px; height: 680px; }
 
         /* Kiri: Kontrol Variabel */
         #controls { width: 250px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 15px; }
@@ -25,15 +24,16 @@
 
         /* Tengah: Area Simulasi Jatuh */
         #sim-area { flex-grow: 1; background: linear-gradient(#0b0d17, #1a1c2c); border-radius: 12px; position: relative; border: 2px solid #4cc9f0; overflow: hidden; }
-        #ground { position: absolute; bottom: 0; width: 100%; height: 20px; background: #333; }
+        #ground { position: absolute; bottom: 0; width: 100%; height: 20px; background: #333; transition: background 0.5s; }
         #rock { position: absolute; left: 50%; transform: translateX(-50%); width: 45px; height: 45px; background: radial-gradient(#aaa, #444); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid #666; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
         #timer-display { position: absolute; top: 20px; right: 20px; font-family: monospace; font-size: 2.2em; color: #f1c40f; text-shadow: 2px 2px 4px black; }
 
         /* Kanan: Palet Planet */
         #planet-palette { width: 220px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
-        .planet-btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; background: #222; color: white; display: flex; align-items: center; justify-content: space-between; font-size: 0.9em; }
+        .planet-btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; background: #222; color: white; display: flex; align-items: center; justify-content: space-between; font-size: 1em; }
         .planet-btn:hover { background: #444; transform: scale(1.03); }
         .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
+        .symbol { font-size: 1.4em; width: 30px; text-align: center; }
         .g-val { font-size: 0.8em; opacity: 0.8; }
 
         .info-box { margin-top: 10px; padding: 12px; background: rgba(76, 201, 240, 0.2); border-radius: 8px; font-size: 0.9em; border-left: 4px solid #4cc9f0; }
@@ -62,7 +62,7 @@
                 <input type="number" id="input-mass" value="5" oninput="updateMass()">
             </div>
             <div class="info-box">
-                <b>Planet:</b> <span id="lbl-planet">Bumi</span><br>
+                <b>Lokasi:</b> <span id="lbl-planet">Bumi</span><br>
                 <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
             </div>
             <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
@@ -77,15 +77,36 @@
 
         <div id="planet-palette">
             <h4 style="margin: 0 0 10px 0; text-align: center;">Pilih Lokasi</h4>
-            <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')">🪐 Merkurius <span class="g-val">3.7</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')">☁️ Venus <span class="g-val">8.9</span></button>
-            <button class="planet-btn active" onclick="selectPlanet('Bumi', 9.8, '#1a1c2c', '#3498db')">🌍 Bumi <span class="g-val">9.8</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')">🌑 Bulan <span class="g-val">1.6</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Mars', 3.71, '#2c1a1a', '#c0392b')">🔴 Mars <span class="g-val">3.7</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')">🟠 Jupiter <span class="g-val">24.8</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')">🟡 Saturnus <span class="g-val">10.4</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')">💎 Uranus <span class="g-val">8.7</span></button>
-            <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')">❄️ Pluto <span class="g-val">0.6</span></button>
+            <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')">
+                <span class="symbol">☿</span> Merkurius <span class="g-val">3.7</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')">
+                <span class="symbol">♀</span> Venus <span class="g-val">8.9</span>
+            </button>
+            <button class="planet-btn active" onclick="selectPlanet('Bumi', 9.8, '#1a1c2c', '#3498db')">
+                <span class="symbol">♁</span> Bumi <span class="g-val">9.8</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')">
+                <span class="symbol">☾</span> Bulan <span class="g-val">1.6</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Mars', 3.71, '#2c1a1a', '#c0392b')">
+                <span class="symbol">♂</span> Mars <span class="g-val">3.7</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')">
+                <span class="symbol">♃</span> Jupiter <span class="g-val">24.8</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')">
+                <span class="symbol">♄</span> Saturnus <span class="g-val">10.4</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')">
+                <span class="symbol">♅</span> Uranus <span class="g-val">8.7</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')">
+                <span class="symbol">♆</span> Neptunus <span class="g-val">11.1</span>
+            </button>
+            <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')">
+                <span class="symbol">♇</span> Pluto <span class="g-val">0.6</span>
+            </button>
         </div>
     </div>
 
@@ -108,8 +129,6 @@
             document.getElementById('lbl-g').innerText = g;
             document.getElementById('sim-area').style.background = `linear-gradient(${bg}, #000)`;
             document.getElementById('ground').style.background = groundCol;
-            
-            // Update Active Button
             document.querySelectorAll('.planet-btn').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
             initPos();
@@ -131,20 +150,15 @@
 
         function animate() {
             const now = performance.now();
-            const t = (now - startTime) / 1000; // waktu dalam detik
-            
-            // Rumus fisika dasar: s = 0.5 * g * t^2
+            const t = (now - startTime) / 1000;
             const distanceFallen = 0.5 * currentG * (t * t);
             const totalHeight = document.getElementById('input-height').value;
-            
-            // Hitung posisi visual
             const remainingHeight = totalHeight - distanceFallen;
             const percentage = (remainingHeight / totalHeight) * 80;
 
             if (remainingHeight <= 0) {
                 rock.style.bottom = "20px";
-                const finalTime = Math.sqrt((2 * totalHeight) / currentG);
-                timerDisplay.innerText = finalTime.toFixed(2) + "s";
+                timerDisplay.innerText = Math.sqrt((2 * totalHeight) / currentG).toFixed(2) + "s";
                 isFalling = false;
                 return;
             }
@@ -154,7 +168,6 @@
             animationId = requestAnimationFrame(animate);
         }
 
-        // Inisialisasi awal
         initPos();
         updateMass();
     </script>
