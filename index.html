@@ -31,14 +31,14 @@
             border: 1px solid rgba(255,255,255,0.2);
             box-sizing: border-box;
         }
-        .maskot { height: 50px; width: auto; }
-        h2 { margin: 0; color: #4cc9f0; font-size: 0.9em; }
-        .sub-h2 { color: #f1c40f; margin: 2px 0 0 0; font-weight: bold; font-size: 0.7em; }
+        .maskot { height: 45px; width: auto; }
+        h2 { margin: 0; color: #4cc9f0; font-size: 0.85em; }
+        .sub-h2 { color: #f1c40f; margin: 2px 0 0 0; font-weight: bold; font-size: 0.65em; }
 
-        /* --- Layout Utama: Dipaksa Tetap Berjajar --- */
+        /* --- Layout Utama: Berjajar Horizontal --- */
         #main-wrapper { 
             display: flex; 
-            flex-direction: row; /* Tetap berjajar horizontal */
+            flex-direction: row; 
             gap: 5px; 
             width: 100%; 
             max-width: 1350px; 
@@ -47,9 +47,9 @@
             box-sizing: border-box;
         }
 
-        /* --- Area Kiri: Lokasi (Dipersempit) --- */
+        /* --- Area Kiri: Lokasi (Sempit) --- */
         #planet-palette { 
-            width: 25%; /* Mempersempit lebar area lokasi */
+            width: 25%; 
             background: rgba(255,255,255,0.1); 
             padding: 5px; 
             border-radius: 8px; 
@@ -61,9 +61,9 @@
             flex-shrink: 0;
         }
 
-        /* --- Area Tengah: Simulasi (Dipersempit) --- */
+        /* --- Area Tengah: Simulasi --- */
         #sim-area { 
-            flex: 1; /* Fleksibel namun mengisi ruang tengah */
+            flex: 1; 
             background: linear-gradient(#0b0d17, #1a1c2c); 
             border-radius: 8px; 
             position: relative; 
@@ -71,11 +71,11 @@
             overflow: hidden; 
         }
 
-        /* --- Area Kanan: Variabel (Dipersempit) --- */
+        /* --- Area Kanan: Variabel (Sempit) --- */
         #controls { 
-            width: 25%; /* Mempersempit lebar area variabel */
+            width: 25%; 
             background: rgba(255,255,255,0.1); 
-            padding: 8px; 
+            padding: 6px; 
             border-radius: 8px; 
             display: flex; 
             flex-direction: column; 
@@ -84,7 +84,6 @@
             flex-shrink: 0;
         }
 
-        /* Penyesuaian Komponen di Dalam Area yang Sempit */
         .planet-btn { 
             padding: 6px; 
             border: none; 
@@ -94,28 +93,28 @@
             color: white; 
             display: flex; 
             align-items: center; 
-            font-size: 0.65em; /* Font diperkecil agar muat */
+            font-size: 0.6em; 
         }
-        .symbol { font-size: 1.1em; width: 15px; margin-right: 2px; }
+        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
+        .symbol { font-size: 1em; width: 12px; margin-right: 2px; }
         
-        #timer-display { position: absolute; top: 10px; right: 10px; font-size: 1.2em; color: #f1c40f; }
+        #timer-display { position: absolute; top: 10px; right: 10px; font-size: 1.1em; color: #f1c40f; font-family: monospace; }
         #rock { 
             position: absolute; left: 50%; transform: translateX(-50%); 
-            width: 30px; height: 30px; /* Ukuran batu disesuaikan */
+            width: 30px; height: 30px; 
             background: radial-gradient(#aaa, #444); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 8px; border: 1px solid #666; 
         }
 
-        .input-group label { font-size: 0.6em; }
-        input { padding: 4px; font-size: 0.7em; background: #1a1c2c; color: white; border: 1px solid #444; width: 100%; border-radius: 4px; }
+        .input-group label { font-size: 0.55em; font-weight: bold; display: block; margin-bottom: 2px; }
+        input { padding: 4px; font-size: 0.7em; background: #1a1c2c; color: white; border: 1px solid #444; width: 100%; border-radius: 4px; box-sizing: border-box; }
 
-        .info-box { padding: 5px; background: rgba(76, 201, 240, 0.15); border-radius: 5px; font-size: 0.6em; }
-        button#btn-main { background: #4cc9f0; color: #000; padding: 8px; border-radius: 5px; border: none; font-weight: bold; font-size: 0.7em; cursor: pointer; }
+        .info-box { padding: 5px; background: rgba(76, 201, 240, 0.15); border-radius: 5px; font-size: 0.55em; text-align: center; }
+        button#btn-main { background: #4cc9f0; color: #000; padding: 10px 2px; border-radius: 5px; border: none; font-weight: bold; font-size: 0.65em; cursor: pointer; text-transform: uppercase; }
         
         #ground { position: absolute; bottom: 0; width: 100%; height: 15px; background: #333; }
         
-        /* Hilangkan h3 pada mobile agar tidak makan tempat */
         @media (max-width: 600px) {
             h3 { display: none; }
         }
@@ -155,18 +154,18 @@
         <div id="controls">
             <h3 style="margin: 0; color: #4cc9f0; font-size: 0.7em; text-align: center;">Var</h3>
             <div class="input-group">
-                <label>H (m):</label>
+                <label>Ketinggian (m):</label>
                 <input type="number" id="input-height" value="100" onchange="initPos()">
             </div>
             <div class="input-group">
-                <label>M (kg):</label>
+                <label>Massa (kg):</label>
                 <input type="number" id="input-mass" value="5" oninput="updateMass()">
             </div>
             <div class="info-box">
-                <span id="lbl-planet">Bumi</span>: <span id="lbl-g">9.8</span>
+                <span id="lbl-planet">Bumi</span><br><span id="lbl-g">9.8</span> m/s²
             </div>
-            <button id="btn-main" onclick="startFall()">GO!</button>
-            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 4px; border-radius: 4px; cursor: pointer; font-size: 0.6em;">RESET</button>
+            <button id="btn-main" onclick="startFall()">JATUHKAN</button>
+            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 4px; border-radius: 4px; cursor: pointer; font-size: 0.55em;">RESET</button>
         </div>
     </div>
 
