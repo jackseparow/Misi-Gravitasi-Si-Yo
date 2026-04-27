@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Si Yo: Simulator Gravitasi Tata Surya</title>
     <style>
         body { 
@@ -12,143 +12,113 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 10px; 
+            padding: 5px; 
             margin: 0; 
             overflow-x: hidden; 
             min-height: 100vh;
         }
         
-        /* --- Title Area --- */
         #title-container { 
             display: flex; 
             align-items: center; 
-            gap: 15px; 
-            margin-bottom: 20px; 
+            gap: 10px; 
+            margin-bottom: 10px; 
             background: rgba(255, 255, 255, 0.1); 
-            padding: 15px; 
-            border-radius: 15px; 
-            width: 100%; 
+            padding: 10px; 
+            border-radius: 12px; 
+            width: 98%; 
             max-width: 1200px; 
             border: 1px solid rgba(255,255,255,0.2);
             box-sizing: border-box;
         }
-        .maskot { height: clamp(60px, 10vw, 100px); width: auto; }
-        h2 { margin: 0; color: #4cc9f0; font-size: clamp(1.1em, 4vw, 1.5em); }
-        .sub-h2 { color: #f1c40f; margin: 5px 0 0 0; font-weight: bold; font-size: clamp(0.8em, 3vw, 1em); }
+        .maskot { height: 50px; width: auto; }
+        h2 { margin: 0; color: #4cc9f0; font-size: 0.9em; }
+        .sub-h2 { color: #f1c40f; margin: 2px 0 0 0; font-weight: bold; font-size: 0.7em; }
 
-        /* --- Layout Utama Responsif --- */
+        /* --- Layout Utama: Dipaksa Tetap Berjajar --- */
         #main-wrapper { 
             display: flex; 
-            gap: 15px; 
+            flex-direction: row; /* Tetap berjajar horizontal */
+            gap: 5px; 
             width: 100%; 
             max-width: 1350px; 
-            flex-direction: row; /* Default PC */
+            height: 80vh; 
             align-items: stretch;
+            box-sizing: border-box;
         }
 
-        /* --- Sisi Kiri: Lokasi --- */
+        /* --- Area Kiri: Lokasi (Dipersempit) --- */
         #planet-palette { 
-            width: 230px; 
+            width: 25%; /* Mempersempit lebar area lokasi */
             background: rgba(255,255,255,0.1); 
-            padding: 15px; 
-            border-radius: 12px; 
+            padding: 5px; 
+            border-radius: 8px; 
             display: flex; 
             flex-direction: column; 
-            gap: 8px; 
-            max-height: 680px;
+            gap: 4px; 
             overflow-y: auto; 
-            border-left: 4px solid #f1c40f;
+            border-left: 2px solid #f1c40f;
             flex-shrink: 0;
         }
 
-        /* --- Tengah: Area Simulasi --- */
+        /* --- Area Tengah: Simulasi (Dipersempit) --- */
         #sim-area { 
-            flex-grow: 1; 
+            flex: 1; /* Fleksibel namun mengisi ruang tengah */
             background: linear-gradient(#0b0d17, #1a1c2c); 
-            border-radius: 12px; 
+            border-radius: 8px; 
             position: relative; 
             border: 2px solid #4cc9f0; 
             overflow: hidden; 
-            min-height: 400px;
         }
 
-        /* --- Sisi Kanan: Variabel --- */
+        /* --- Area Kanan: Variabel (Dipersempit) --- */
         #controls { 
-            width: 250px; 
+            width: 25%; /* Mempersempit lebar area variabel */
             background: rgba(255,255,255,0.1); 
-            padding: 20px; 
-            border-radius: 12px; 
+            padding: 8px; 
+            border-radius: 8px; 
             display: flex; 
             flex-direction: column; 
-            gap: 15px; 
-            border-right: 4px solid #4cc9f0;
+            gap: 8px; 
+            border-right: 2px solid #4cc9f0;
             flex-shrink: 0;
         }
 
-        /* Tablet & HP Styling */
-        @media (max-width: 900px) {
-            #main-wrapper {
-                flex-direction: column; /* Tumpuk vertikal di HP */
-            }
-            #planet-palette, #controls {
-                width: 100%; /* Lebar penuh di HP */
-                max-height: none;
-                border-left: none;
-                border-right: none;
-                border-top: 4px solid #f1c40f;
-                box-sizing: border-box;
-            }
-            #planet-palette {
-                flex-direction: row; /* Tombol menyamping di HP */
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-            .planet-btn {
-                flex-shrink: 0;
-                min-width: 140px;
-            }
-            #sim-area {
-                height: 400px;
-                order: -1; /* Simulasi pindah ke paling atas di HP */
-            }
-        }
-
+        /* Penyesuaian Komponen di Dalam Area yang Sempit */
         .planet-btn { 
-            padding: 12px; 
+            padding: 6px; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 4px; 
             cursor: pointer; 
-            text-align: left; 
-            transition: 0.3s; 
             background: #222; 
             color: white; 
             display: flex; 
             align-items: center; 
-            justify-content: space-between; 
-            font-size: 0.95em; 
+            font-size: 0.65em; /* Font diperkecil agar muat */
         }
-        .planet-btn:hover { background: #333; transform: translateX(5px); }
-        .planet-btn.active { background: #4cc9f0; color: #000; font-weight: bold; }
-        .symbol { font-size: 1.3em; width: 30px; text-align: center; }
-
-        #ground { position: absolute; bottom: 0; width: 100%; height: 25px; background: #333; transition: background 0.5s; }
-        #rock { 
-            position: absolute; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; 
-            background: radial-gradient(#aaa, #444); border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; font-size: 11px; font-weight: bold; 
-            border: 2px solid #666; box-shadow: 0 0 15px rgba(255,255,255,0.3); 
-        }
-        #timer-display { position: absolute; top: 20px; right: 20px; font-family: monospace; font-size: 2.5em; color: #f1c40f; text-shadow: 2px 2px 4px black; }
-
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        input { padding: 10px; border-radius: 6px; border: none; background: #1a1c2c; color: white; border: 1px solid #444; font-size: 1em; width: 100%; box-sizing: border-box; }
-
-        .info-box { padding: 12px; background: rgba(76, 201, 240, 0.15); border-radius: 8px; font-size: 0.9em; }
-        button#btn-main { background: #4cc9f0; color: #000; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: 0.2s; }
-        button#btn-main:hover { background: #3ab1d4; transform: scale(1.03); }
+        .symbol { font-size: 1.1em; width: 15px; margin-right: 2px; }
         
-        #planet-palette::-webkit-scrollbar { height: 5px; width: 5px; }
-        #planet-palette::-webkit-scrollbar-thumb { background: #f1c40f; border-radius: 10px; }
+        #timer-display { position: absolute; top: 10px; right: 10px; font-size: 1.2em; color: #f1c40f; }
+        #rock { 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+            width: 30px; height: 30px; /* Ukuran batu disesuaikan */
+            background: radial-gradient(#aaa, #444); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 8px; border: 1px solid #666; 
+        }
+
+        .input-group label { font-size: 0.6em; }
+        input { padding: 4px; font-size: 0.7em; background: #1a1c2c; color: white; border: 1px solid #444; width: 100%; border-radius: 4px; }
+
+        .info-box { padding: 5px; background: rgba(76, 201, 240, 0.15); border-radius: 5px; font-size: 0.6em; }
+        button#btn-main { background: #4cc9f0; color: #000; padding: 8px; border-radius: 5px; border: none; font-weight: bold; font-size: 0.7em; cursor: pointer; }
+        
+        #ground { position: absolute; bottom: 0; width: 100%; height: 15px; background: #333; }
+        
+        /* Hilangkan h3 pada mobile agar tidak makan tempat */
+        @media (max-width: 600px) {
+            h3 { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -156,24 +126,24 @@
     <div id="title-container">
         <img src="maskot-siyo.png" alt="Si Yo" class="maskot">
         <div id="title-text-area">
-            <h2>🛡️ Si Yo: Simulator Gravitasi Tata Surya</h2>
-            <p class="sub-h2">Taman Numerasi BBGTK D.I. Yogyakarta</p>
+            <h2>Si Yo: Gravitasi</h2>
+            <p class="sub-h2">Taman Numerasi BBGTK DIY</p>
         </div>
     </div>
 
     <div id="main-wrapper">
         <div id="planet-palette">
-            <h3 style="margin: 0; color: #f1c40f; text-align: center; width: 100%;">Pilih Lokasi</h3>
-            <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')"><span class="symbol">☿</span> Merkurius</button>
-            <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')"><span class="symbol">♀</span> Venus</button>
+            <h3 style="margin: 0; color: #f1c40f; font-size: 0.7em; text-align: center;">Lokasi</h3>
+            <button class="planet-btn" onclick="selectPlanet('Merkurius', 3.7, '#1e1e1e', '#95a5a6')"><span class="symbol">☿</span> Mer</button>
+            <button class="planet-btn" onclick="selectPlanet('Venus', 8.87, '#3d2b1f', '#e67e22')"><span class="symbol">♀</span> Ven</button>
             <button class="planet-btn active" onclick="selectPlanet('Bumi', 9.8, '#1a1c2c', '#3498db')"><span class="symbol">♁</span> Bumi</button>
-            <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')"><span class="symbol">☾</span> Bulan</button>
+            <button class="planet-btn" onclick="selectPlanet('Bulan', 1.62, '#222', '#888')"><span class="symbol">☾</span> Bul</button>
             <button class="planet-btn" onclick="selectPlanet('Mars', 3.71, '#2c1a1a', '#c0392b')"><span class="symbol">♂</span> Mars</button>
-            <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')"><span class="symbol">♃</span> Jupiter</button>
-            <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')"><span class="symbol">♄</span> Saturnus</button>
-            <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')"><span class="symbol">♅</span> Uranus</button>
-            <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')"><span class="symbol">♆</span> Neptunus</button>
-            <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')"><span class="symbol">♇</span> Pluto</button>
+            <button class="planet-btn" onclick="selectPlanet('Jupiter', 24.79, '#2c251a', '#f39c12')"><span class="symbol">♃</span> Jup</button>
+            <button class="planet-btn" onclick="selectPlanet('Saturnus', 10.44, '#2c2c1a', '#f1c40f')"><span class="symbol">♄</span> Sat</button>
+            <button class="planet-btn" onclick="selectPlanet('Uranus', 8.69, '#1a2c2c', '#1abc9c')"><span class="symbol">♅</span> Ura</button>
+            <button class="planet-btn" onclick="selectPlanet('Neptunus', 11.15, '#0b132b', '#3f37c9')"><span class="symbol">♆</span> Nep</button>
+            <button class="planet-btn" onclick="selectPlanet('Pluto', 0.62, '#0f0f1a', '#34495e')"><span class="symbol">♇</span> Plu</button>
         </div>
 
         <div id="sim-area">
@@ -183,21 +153,20 @@
         </div>
 
         <div id="controls">
-            <h3 style="margin: 0; color: #4cc9f0; text-align: center;">Variabel</h3>
+            <h3 style="margin: 0; color: #4cc9f0; font-size: 0.7em; text-align: center;">Var</h3>
             <div class="input-group">
-                <label>Tinggi Awal Meter:</label>
+                <label>H (m):</label>
                 <input type="number" id="input-height" value="100" onchange="initPos()">
             </div>
             <div class="input-group">
-                <label>Berat Batu kg:</label>
+                <label>M (kg):</label>
                 <input type="number" id="input-mass" value="5" oninput="updateMass()">
             </div>
             <div class="info-box">
-                <b>Lokasi:</b> <span id="lbl-planet">Bumi</span><br>
-                <b>Gravitasi:</b> <span id="lbl-g">9.8</span> m/s²
+                <span id="lbl-planet">Bumi</span>: <span id="lbl-g">9.8</span>
             </div>
-            <button id="btn-main" onclick="startFall()">JATUHKAN!</button>
-            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px; border-radius: 8px; cursor: pointer;">RESET POSISI</button>
+            <button id="btn-main" onclick="startFall()">GO!</button>
+            <button onclick="initPos()" style="background:transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 4px; border-radius: 4px; cursor: pointer; font-size: 0.6em;">RESET</button>
         </div>
     </div>
 
@@ -228,7 +197,7 @@
         function initPos() {
             isFalling = false;
             cancelAnimationFrame(animationId);
-            rock.style.bottom = "calc(25px + 80%)"; 
+            rock.style.bottom = "calc(15px + 80%)"; 
             timerDisplay.innerText = "0.00s";
         }
 
@@ -248,13 +217,13 @@
             const percentage = (remainingHeight / totalHeight) * 80;
 
             if (remainingHeight <= 0) {
-                rock.style.bottom = "25px";
+                rock.style.bottom = "15px";
                 timerDisplay.innerText = Math.sqrt((2 * totalHeight) / currentG).toFixed(2) + "s";
                 isFalling = false;
                 return;
             }
 
-            rock.style.bottom = `calc(25px + ${percentage}%)`;
+            rock.style.bottom = `calc(15px + ${percentage}%)`;
             timerDisplay.innerText = t.toFixed(2) + "s";
             animationId = requestAnimationFrame(animate);
         }
